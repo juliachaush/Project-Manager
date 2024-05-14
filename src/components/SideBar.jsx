@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import ContainerButton from "./ContainerButton";
+import ProjectPage from "./ProjectPage";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -30,15 +31,34 @@ const H2 = styled.h2`
   font-weight: bold;
 `;
 
-export default function SideBar({}) {
+const Li = styled.li`
+  background-color: #252525;
+  font-size: 24px;
+  margin-bottom: 16px;
+  padding-left: 1rem;
+  max-width: 20rem;
+`;
+
+const Ul = styled.ul`
+  margin-top: 24px;
+`;
+
+export default function SideBar({
+  projectData,
+  onAddProjectClick,
+  onProjectClick,
+}) {
   return (
     <StyledDiv>
       <H2>Your projects</H2>
-      <ul>
-        <li>
-          <ContainerButton name="+ Add project" />
-        </li>
-      </ul>
+      <ContainerButton onClick={onAddProjectClick} name="+ Add project" />
+      <Ul>
+        {projectData.map((project) => (
+          <Li onClick={() => onProjectClick(project)} key={project.id}>
+            {project.title}
+          </Li>
+        ))}
+      </Ul>
     </StyledDiv>
   );
 }

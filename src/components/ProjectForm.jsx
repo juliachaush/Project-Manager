@@ -11,19 +11,27 @@ const FormDiv = styled.div`
   flex-direction: column;
   margin-top: 10rem;
   margin-left: 33rem;
-  width: 80%;
+  max-width: 45rem;
 `;
 
-export default function ProjectForm({ onData }) {
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 24px;
+  justify-content: right;
+`;
+
+export default function ProjectForm({
+  handleDataProject,
+  setProject,
+  handleCancelAddingProject,
+}) {
   const [userData, setUserData] = useState({
     title: "",
     description: "",
     date: "",
+    tasks: [],
   });
-
-  const [clickStatus, setClickStatus] = useState(false);
-
-  const hideForm = !clickStatus ? { display: "flex" } : { display: "none" };
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -33,16 +41,21 @@ export default function ProjectForm({ onData }) {
   }
 
   function sendDataProject() {
-    onData(userData);
-    setClickStatus(true);
+    handleDataProject([
+      {
+        ...userData,
+        ...{ id: Math.floor(Math.random() * (10000 - 1000 + 1)) },
+      },
+    ]);
+    setProject(false);
   }
 
   return (
-    <FormDiv style={hideForm}>
-      <div>
-        <TextButton name="Cancel" />
+    <FormDiv>
+      <ButtonWrapper>
+        <TextButton onClick={handleCancelAddingProject} name="Cancel" />
         <ContainerButton name="Save" onClick={sendDataProject} />
-      </div>
+      </ButtonWrapper>
       <ul>
         <li>
           <Input

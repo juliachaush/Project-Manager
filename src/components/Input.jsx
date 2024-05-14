@@ -9,7 +9,7 @@ const Label = styled.label`
 `;
 
 const InputInner = styled.input`
-  background-color: #d2d3d3;
+  background-color: #e5e4e2;
   border-radius: 4px;
   min-height: 48px;
   min-width: 720px;

@@ -6,6 +6,7 @@ import icon from "./assets/no-projects.png";
 import ProjectForm from "./components/ProjectForm";
 import ContainerButton from "./components/ContainerButton";
 import ProjectPage from "./components/ProjectPage";
+import TaskView from "./components/TaskView";
 
 const Image = styled.img`
   with: 100px;
@@ -32,30 +33,123 @@ const Wrapper = styled.div`
 `;
 
 function App() {
+  const [startAddingProject, setStartAddingProject] = useState(true);
+  const [projectData, setprojectData] = useState([]);
   const [addProject, setAddProject] = useState(false);
-  const [projectData, setprojectData] = useState(null);
+  const [openProject, setOpenProject] = useState(false);
+  const [selectedProjectData, setSelectedProjectData] = useState({});
 
-  function handleClick() {
+  function handleAddProject() {
+    setStartAddingProject(false);
     setAddProject(true);
-    console.log("hhhh");
+    setOpenProject(false);
   }
 
   function handleDataProject(data) {
-    setprojectData(data);
+    setStartAddingProject(true);
+    setprojectData((prevProjectData) => {
+      return [...prevProjectData, ...data];
+    });
+  }
+
+  function handleOpenProject(project) {
+    setStartAddingProject(false);
+    setAddProject(false);
+    setOpenProject(true);
+    setSelectedProjectData(project);
+  }
+
+  function delateProject(id) {
+    const newProjectData = projectData.filter((project) => project.id !== id);
+    setprojectData(newProjectData);
+  }
+
+  function handleDelateProject(id) {
+    setStartAddingProject(true);
+    setOpenProject(false);
+    delateProject(id);
+  }
+
+  function handleCancelAddingProject() {
+    setStartAddingProject(true);
+    setAddProject(false);
+  }
+
+  function handleAddTask(task, id) {
+    const updateProjectData = projectData.map((project) => {
+      if (project.id === id) {
+        const ddd = {
+          ...task,
+          id: Math.floor(Math.random() * (10000 - 1000 + 1)),
+        };
+
+        console.log(ddd);
+        return {
+          ...project,
+          tasks: [...project.tasks, ddd],
+        };
+      } else return project;
+    });
+
+    setprojectData(updateProjectData);
+
+    updateProjectData.map((project) => {
+      if (project.id === id) {
+        setSelectedProjectData(project);
+      }
+    });
+  }
+
+  function handleRemoveTask(taskId, projectId) {
+    const updateTasksData = projectData.map((project) => {
+      if (project.id === projectId) {
+        const updateTaskArr = project.tasks.filter(
+          (task) => task.id !== taskId
+        );
+
+        return { ...project, tasks: [...updateTaskArr] };
+      } else return project;
+    });
+
+    setprojectData(updateTasksData);
+
+    setSelectedProjectData(
+      updateTasksData.find((project) => project.id === projectId)
+    );
   }
 
   return (
     <>
-      <SideBar />
-      {addProject && <ProjectForm onData={handleDataProject} />}
+      <SideBar
+        projectData={projectData}
+        onAddProjectClick={handleAddProject}
+        onProjectClick={handleOpenProject}
+      />
+      {addProject && (
+        <ProjectForm
+          setProject={setAddProject}
+          handleDataProject={handleDataProject}
+          handleCancelAddingProject={handleCancelAddingProject}
+        />
+      )}
 
-      {projectData && <ProjectPage onData={projectData} />}
-      {!addProject && (
+      {openProject && (
+        <ProjectPage
+          selectedProjectData={selectedProjectData}
+          handleDelateProject={handleDelateProject}
+          handleAddTask={handleAddTask}
+          handleRemoveTask={handleRemoveTask}
+        />
+      )}
+      {startAddingProject && (
         <Wrapper>
           <Image src={icon} alt="Мое изображение" />
           <H1>No project Selected</H1>
           <H3>Select a project or start a new one</H3>
-          <ContainerButton onClick={handleClick} name="Create new project" />
+          <ContainerButton
+            onClick={handleAddProject}
+            name="Create new project"
+          />
         </Wrapper>
       )}
     </>

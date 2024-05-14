@@ -1,7 +1,10 @@
+import { useState, useRef } from "react";
+
 import styled from "styled-components";
 import TextButton from "./TextButton";
 import Input from "./Input";
 import ProjectForm from "./ProjectForm";
+import TaskView from "./TaskView";
 
 const ProjectDiv = styled.div`
   display: flex;
@@ -41,23 +44,67 @@ const H4 = styled.h4`
   padding-bottom: 24px;
 `;
 
-export default function ProjectPage() {
+export default function ProjectPage({
+  selectedProjectData,
+  handleDelateProject,
+  handleAddTask,
+  handleRemoveTask,
+}) {
+  const [task, setTask] = useState({
+    title: "",
+    id: "",
+  });
+
+  const [addTask, setAddTask] = useState(false);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setTask((prevTask) => {
+      return { ...prevTask, [name]: value };
+    });
+    setAddTask(true);
+  }
+
+  function addTaskHandler(task, selectedProjectDataid) {
+    handleAddTask(task, selectedProjectDataid);
+    setTask({ title: "", id: "" });
+  }
+
   return (
     <ProjectDiv>
       <HeadWrapper>
-        <H2>Learning Project</H2>
-        <TextButton name="Delete" />
+        <H2>{selectedProjectData.title}</H2>
+        <TextButton
+          onClick={() => handleDelateProject(selectedProjectData.id)}
+          name="Delete"
+        />
       </HeadWrapper>
-      <H3>Dec 29, 2024</H3>
-      <H4>Learn React from the group up</H4>
-      <H4>Start with the basics, finish with advanced knowledge</H4>
+      <H3>{selectedProjectData.date}</H3>
+      <H4>{selectedProjectData.description}</H4>
       <Divider />
       <H2>Tasks</H2>
       <HeadWrapper>
-        <Input />
-        <TextButton name="Add Task" />
+        <Input
+          value={task.title}
+          name="title"
+          type="text"
+          label=""
+          onChange={handleChange}
+        />
+        <TextButton
+          onClick={() => addTaskHandler(task, selectedProjectData.id)}
+          name="Add Task"
+        />
       </HeadWrapper>
-      <H4>This project does not have any task yet</H4>
+      {!addTask && <H4>This project does not have any task yet</H4>}
+      {selectedProjectData.tasks.map((task) => (
+        <TaskView
+          key={task.id}
+          taskName={task.title}
+          onClick={() => handleRemoveTask(task.id, selectedProjectData.id)}
+          id={task.id}
+        />
+      ))}
     </ProjectDiv>
   );
 }

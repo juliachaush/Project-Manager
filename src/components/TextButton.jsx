@@ -3,8 +3,9 @@ import styled from "styled-components";
 const ButtonText = styled.button`
   background-color: none;
   font-size: 16px;
-  padding: 12px 24px;
+  padding-right: 12px;
+  padding-left: 12px;
 `;
-export default function TextButton({ name }) {
-  return <ButtonText>{name}</ButtonText>;
+export default function TextButton({ onClick, name }) {
+  return <ButtonText onClick={onClick}>{name}</ButtonText>;
 }
