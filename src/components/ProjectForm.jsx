@@ -79,7 +79,7 @@ export default function ProjectForm({
           <Input
             value={userData.date}
             name="date"
-            type="data"
+            type="date"
             label="due date"
             onChange={handleChange}
           />

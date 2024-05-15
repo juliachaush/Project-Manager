@@ -119,7 +119,7 @@ function App() {
   }
 
   return (
-    <>
+    <main>
       <SideBar
         projectData={projectData}
         onAddProjectClick={handleAddProject}
@@ -152,7 +152,7 @@ function App() {
           />
         </Wrapper>
       )}
-    </>
+    </main>
   );
 }
 

@@ -12,9 +12,9 @@ const InputInner = styled.input`
   background-color: #e5e4e2;
   border-radius: 4px;
   min-height: 48px;
-  min-width: 720px;
+  width: 100%;
   margin-bottom: 16px;
-  padding-left: 16px;
+  padding: 12px;
 `;
 
 export default function Input({ label, ...props }) {
@@ -22,7 +22,7 @@ export default function Input({ label, ...props }) {
     <>
       <Label>
         <h2>{label}</h2>
-        <InputInner {...props} type="text" />
+        <InputInner {...props} />
       </Label>
     </>
   );
